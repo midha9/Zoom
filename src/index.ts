@@ -1,8 +1,10 @@
 #!/usr/bin/env node
+import { OutgoingMessage, SupportedMessage, UserManager, IncomingMessa  } from "http";
 import { server as WebSocketServer } from "websocket";
-import http from "http";
+import http, { IncomingMessage } from "http";
+import { kStringMaxLength } from "buffer";
 
-var server = http.createServer(function (request: any, response: any) {
+const server = http.createServer(function (request: any, response: any) {
   console.log(new Date() + " Received request for " + request.url);
   response.writeHead(404);
   response.end();
@@ -94,3 +96,19 @@ client.on("connect", function (connection) {
 });
 
 client.connect("ws://localhost:8080/", "echo-protocol");
+
+
+function messageHandler(ws: connection, message: IncomingMessage) {   
+  if (message.type == SupportedMessage.JoinRoom){
+    const payload = message.payload;
+    UserManager.addUser(payload.name, payload.userId, payload.roomId, ws);
+
+  }
+
+
+}
+
+
+
+
+]
